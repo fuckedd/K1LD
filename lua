@@ -26,6 +26,19 @@ local function onChatted(message)
             return -- Exit the function since we've killed everyone
         end
 
+        -- Check if the user wants to kill themselves
+        if targetName == "me" then
+            local localPlayer = game.Players.LocalPlayer
+            if localPlayer.Character then
+                local args = {
+                    [1] = localPlayer.Character
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Kill"):FireServer(unpack(args))
+            else
+                print("You don't have a character to kill.")
+            end
+        end
+
         -- Convert the display name to the corresponding username
         local targetUsername = convertDisplayNameToUsername(targetName)
 
@@ -43,5 +56,3 @@ end
 
 -- Connect the onChatted function to player chat event
 game:GetService("Players").LocalPlayer.Chatted:Connect(onChatted)
-
-
