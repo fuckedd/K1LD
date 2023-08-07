@@ -1,10 +1,8 @@
--- Function to handle player chat
 local function onChatted(message)
     local prefix = ".kill "
     if message:sub(1, #prefix) == prefix then
         local targetName = message:sub(#prefix + 1):lower() -- Convert to lowercase for case-insensitive comparison
 
-        -- Function to find a player by display name and return the corresponding username
         local function convertDisplayNameToUsername(displayName)
             for _, player in ipairs(game.Players:GetPlayers()) do
                 if player.DisplayName:lower():find(displayName, 1, true) then
@@ -14,7 +12,6 @@ local function onChatted(message)
             return nil
         end
 
-        -- Check if the user wants to kill everyone in the server
         if targetName == "all" then
             -- Loop through all players and execute the kill command
             for _, player in ipairs(game.Players:GetPlayers()) do
@@ -26,7 +23,19 @@ local function onChatted(message)
             return -- Exit the function since we've killed everyone
         end
 
-        -- Check if the user wants to kill themselves
+        if targetName == "others" then
+            local localPlayer = game.Players.LocalPlayer
+            for _, player in ipairs(game.Players:GetPlayers()) do
+                if player ~= localPlayer and player.Character then
+                    local args = {
+                        [1] = player.Character
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Kill"):FireServer(unpack(args))
+                end
+            end
+            return 
+        end
+
         if targetName == "me" then
             local localPlayer = game.Players.LocalPlayer
             if localPlayer.Character then
@@ -39,10 +48,8 @@ local function onChatted(message)
             end
         end
 
-        -- Convert the display name to the corresponding username
         local targetUsername = convertDisplayNameToUsername(targetName)
 
-        -- Execute the desired code when a player is found
         if targetUsername then
             local args = {
                 [1] = game.Players:FindFirstChild(targetUsername).Character
@@ -54,5 +61,4 @@ local function onChatted(message)
     end
 end
 
--- Connect the onChatted function to player chat event
 game:GetService("Players").LocalPlayer.Chatted:Connect(onChatted)
