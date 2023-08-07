@@ -54,5 +54,4 @@ local function onChatted(message)
     end
 end
 
--- Connect the onChatted function to player chat event
 game:GetService("Players").LocalPlayer.Chatted:Connect(onChatted)
