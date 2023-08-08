@@ -48,11 +48,22 @@ local function onChatted(message)
             end
         end
 
-        local targetUsername = convertDisplayNameToUsername(targetName)
+        local targetPlayer
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player.Name:lower():find(targetName, 1, true) then
+                targetPlayer = player
+                break
+            end
+        end
 
-        if targetUsername then
+        if not targetPlayer then
+            -- If the targetName is not a username, try finding it using convertDisplayNameToUsername
+            targetPlayer = game.Players:FindFirstChild(convertDisplayNameToUsername(targetName))
+        end
+
+        if targetPlayer then
             local args = {
-                [1] = game.Players:FindFirstChild(targetUsername).Character
+                [1] = targetPlayer.Character
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Kill"):FireServer(unpack(args))
         else
