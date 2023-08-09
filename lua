@@ -95,4 +95,4 @@ end
 
 game:GetService("Players").LocalPlayer.Chatted:Connect(onChatted)
 
-print("afawfwafawf")
+
