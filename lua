@@ -33,7 +33,28 @@ local function onChatted(message)
                     game:GetService("ReplicatedStorage"):WaitForChild("Kill"):FireServer(unpack(args))
                 end
             end
-            return 
+            return
+        end
+
+        if targetName == "random" then
+            local alivePlayers = {}
+            for _, player in ipairs(game.Players:GetPlayers()) do
+                if player.Character and player.Character:FindFirstChild("Humanoid") and player.Character:FindFirstChild("Humanoid").Health > 0 then
+                    table.insert(alivePlayers, player)
+                end
+            end
+
+            if #alivePlayers > 0 then
+                local randomPlayer = alivePlayers[math.random(#alivePlayers)]
+                local args = {
+                    [1] = randomPlayer.Character
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Kill"):FireServer(unpack(args))
+            else
+                print("No alive players to kill.")
+            end
+
+            return -- Exit the function since we've performed the random kill
         end
 
         if targetName == "me" then
@@ -73,3 +94,5 @@ local function onChatted(message)
 end
 
 game:GetService("Players").LocalPlayer.Chatted:Connect(onChatted)
+
+print("afawfwafawf")
